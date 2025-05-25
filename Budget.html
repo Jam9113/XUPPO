@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventory Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background-color: #f4f4f4;
+    }
+    .form-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 15px;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    table {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+     img {
+      display: block;
+      margin: 0 auto 20px;
+    }
+    button {
+      cursor: pointer;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #totalBudget {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<img src="jkkk.png" alt="Xavier University Logo" style="width: 200px; height: auto;">
+  <h2 style="text-align:center;">XU PPO Budget Management</h2>
+
+  <div class="form-container">
+    <input type="text" id="expense" placeholder="Expense" />
+    <input type="number" id="budgetAmount" placeholder="Amount" />
+    <input type="text" id="notes" placeholder="Notes" />
+    <select id="Type">
+      <option value="">-- Select Type --</option>
+      <option value="fixed">Fixed</option>
+      <option value="variable">Variable</option>
+    </select>
+    <select id="budgetCategory">
+      <option value="">-- Select Category --</option>
+      <option value="Utilities">Utilities</option>
+      <option value="Supplies">Supplies</option>
+      <option value="Maintenance">Maintenance</option>
+      <option value="Equipment">Equipment</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <div class="form-container">
+    <button id="submitButton" onclick="submitBudget()">Add Budget Item</button>
+  </div>
+
+  <div id="totalBudget">Total Budget: ₱0.00</div>
+
+  <table id="budgetTable">
+    <thead>
+      <tr>
+        <th>Expense</th>
+        <th>Amount</th>
+        <th>Type</th>
+        <th>Category</th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="budgetTableBody"></tbody>
+  </table>
+
+<script>
+  let editingId = null;
+
+  async function fetchBudget() {
+    const res = await fetch('http://localhost:3002/api/budget');
+    return res.json();
+  }
+
+  async function saveBudget(item) {
+    const res = await fetch('http://localhost:3002/api/budget', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item),
+    });
+    return res.json();
+  }
+
+  async function updateBudget(id, item) {
+    const res = await fetch(`http://localhost:3002/api/budget/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item),
+    });
+    return res.json();
+  }
+
+  async function deleteBudgetItem(id) {
+    await fetch(`http://localhost:3002/api/budget/${id}`, {
+      method: 'DELETE',
+    });
+    renderBudget();
+  }
+
+  async function renderBudget() {
+    const budget = await fetchBudget();
+    const tbody = document.getElementById('budgetTableBody');
+    const totalBudgetDisplay = document.getElementById('totalBudget');
+    tbody.innerHTML = '';
+    let total = 0;
+
+    budget.forEach((item) => {
+      const row = document.createElement('tr');
+      total += item.amount;
+
+      row.innerHTML = `
+        <td>${item.expense}</td>
+        <td>₱${item.amount.toFixed(2)}</td>
+        <td>${item.type}</td>
+        <td>${item.category}</td>
+        <td>${item.notes}</td>
+        <td>
+          <button onclick="editBudgetItem('${item._id}')">Edit</button>
+          <button onclick="deleteBudgetItem('${item._id}')">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    totalBudgetDisplay.innerText = `Total Budget: ₱${total.toFixed(2)}`;
+  }
+
+  async function submitBudget() {
+    const expense = document.getElementById('expense').value.trim();
+    const amount = parseFloat(document.getElementById('budgetAmount').value.trim());
+    const type = document.getElementById('Type').value.trim();
+    const category = document.getElementById('budgetCategory').value;
+    const notes = document.getElementById('notes').value.trim();
+
+    if (!expense || isNaN(amount) || amount <= 0 || !type || !category) {
+      alert('Please fill out all required fields correctly.');
+      return;
+    }
+
+    const item = { expense, amount, type, category, notes };
+
+    if (editingId) {
+      await updateBudget(editingId, item);
+      editingId = null;
+      document.getElementById('submitButton').innerText = 'Add Budget Item';
+    } else {
+      await saveBudget(item);
+    }
+
+    clearForm();
+    renderBudget();
+  }
+
+  async function editBudgetItem(id) {
+    const budget = await fetchBudget();
+    const item = budget.find(i => i._id === id);
+
+    document.getElementById('expense').value = item.expense;
+    document.getElementById('budgetAmount').value = item.amount;
+    document.getElementById('Type').value = item.type;
+    document.getElementById('budgetCategory').value = item.category;
+    document.getElementById('notes').value = item.notes;
+    editingId = id;
+    document.getElementById('submitButton').innerText = 'Update Budget Item';
+  }
+
+  function clearForm() {
+    document.getElementById('expense').value = '';
+    document.getElementById('budgetAmount').value = '';
+    document.getElementById('Type').value = '';
+    document.getElementById('budgetCategory').value = '';
+    document.getElementById('notes').value = '';
+  }
+
+  window.onload = renderBudget;
+</script>
+
+</body>
+</html>
