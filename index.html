@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMS Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0000FF;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .card {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s ease-in-out;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    .card h3 {
+      margin: 10px 0;
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #0000FF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .card a:hover {
+      background: #3333FF;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #eee;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="jkkk.png" alt="Xavier University Logo" style="width: 200px; height: auto;">
+    <h1>Inventory Management System Dashboard</h1>
+    <p>Welcome to your IMS Overview</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>Inventory</h3>
+      <p>Track and manage inventory items.</p>
+      <a href="index.html">Go to Inventory</a>
+    </div>
+    <div class="card">
+      <h3>Work Requests</h3>
+      <p>Manage incoming work-related tasks.</p>
+      <a href="index.html#workRequestTable">View Requests</a>
+    </div>
+    <div class="card">
+      <h3>AC Unit Monitoring</h3>
+      <p>Track location and status of units.</p>
+      <a href="index.html#unitsTable">View Units</a>
+    </div>
+    <div class="card">
+      <h3>Budgeting</h3>
+      <p>Monitor expenses and costs.</p>
+      <a href="index.html#budgetSection">Manage Budget</a>
+    </div>
+    <div class="card">
+      <h3>Maintenance Tasks</h3>
+      <p>View scheduled repairs and updates.</p>
+      <a href="index.html#maintenanceTable">View Maintenance</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 XU PPO Inventory System</p>
+  </footer>
+
+</body>
+</html>
