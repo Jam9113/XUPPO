@@ -3,56 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Physical Plant Office - IMS System</title>
+  <title>IMS Dashboard</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f2f2f2;
       margin: 0;
       padding: 0;
-      text-align: center;
     }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .form-container {
-      margin: 80px auto;
-      width: 350px;
-      padding: 30px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .form-container input,
-    .form-container button {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-    }
-
-    .link {
-      color: #0000FF;
-      cursor: pointer;
-    }
-
-    /* DASHBOARD STYLES */
     header {
       background-color: #0000FF;
       color: white;
       padding: 20px;
+      text-align: center;
     }
-
     .container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
       padding: 20px;
     }
-
     .card {
       background-color: white;
       padding: 30px;
@@ -61,15 +31,12 @@
       text-align: center;
       transition: transform 0.2s ease-in-out;
     }
-
     .card:hover {
       transform: scale(1.03);
     }
-
     .card h3 {
       margin: 10px 0;
     }
-
     .card a {
       display: inline-block;
       margin-top: 10px;
@@ -79,120 +46,56 @@
       text-decoration: none;
       border-radius: 5px;
     }
-
     .card a:hover {
       background: #3333FF;
     }
-
     footer {
       text-align: center;
       padding: 10px;
       background: #eee;
       margin-top: 30px;
     }
-
-    /* Hidden by default */
-    #dashboard, #signup {
-      display: none;
-    }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN SECTION -->
-  <div id="login">
-    <img src="jkkk.png" alt="Logo" width="100">
-    <h2>Physical Plant Office</h2>
+  <header>
+    <img src="jkkk.png" alt="Xavier University Logo" style="width: 200px; height: auto;">
+    <h1>Inventory Management System Dashboard</h1>
+    <p>Welcome to your IMS Overview</p>
+  </header>
 
-    <div class="form-container">
-      <form onsubmit="event.preventDefault(); showDashboard();">
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="Enter your Username" required>
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter your Password" required>
-        <button type="submit">Log In</button>
-      </form>
-
-      <p>New to this portal? <span class="link" onclick="toggleView('signup')">Sign up now</span></p>
+  <div class="container">
+    <div class="card">
+      <h3>Inventory</h3>
+      <p>Track and manage inventory items.</p>
+      <a href="inventory.html">Go to Inventory</a>
+    </div>
+    <div class="card">
+      <h3>Work Requests</h3>
+      <p>Manage incoming work-related tasks.</p>
+      <a href="Work Request.html">View Requests</a>
+    </div>
+    <div class="card">
+      <h3>Budgeting</h3>
+      <p>Monitor expenses and costs.</p>
+      <a href="Budget.html">Manage Budget</a>
+    </div>
+    <div class="card">
+      <h3>Maintenance Tasks</h3>
+      <p>View scheduled repairs and updates.</p>
+      <a href="Maintenance.html">View Maintenance</a>
     </div>
   </div>
+  <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSc8jrq5fX9IuFetSINIy3KU46D3cgD9YYYd6gnaUvyjF_Wc7g/viewform?usp=header')"
+        style="position:fixed;bottom:20px;right:20px;padding:10px 20px;background:#0000FF;color:white;border:none;border-radius:5px;">
+  Feedback
+</button>
 
-  <!-- SIGNUP SECTION -->
-  <div id="signup">
-    <img src="jkkk.png" alt="Logo" width="100">
-    <h2>Create an Account</h2>
 
-    <div class="form-container">
-      <form onsubmit="event.preventDefault(); showLogin(); alert('Signup successful! You can now log in.');">
-        <label>Full Name:</label>
-        <input type="text" name="fullname" placeholder="Enter your full name" required>
-        <label>Email:</label>
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="Choose a username" required>
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Create a password" required>
-        <button type="submit">Sign Up</button>
-      </form>
-
-      <p>Already have an account? <span class="link" onclick="toggleView('login')">Log in here</span></p>
-    </div>
-  </div>
-
-  <!-- DASHBOARD SECTION -->
-  <div id="dashboard">
-    <header>
-      <img src="jkkk.png" alt="Xavier University Logo" style="width: 200px;">
-      <h1>Inventory Management System Dashboard</h1>
-      <p>Welcome to your IMS Overview</p>
-    </header>
-
-    <div class="container">
-      <div class="card">
-        <h3>Inventory</h3>
-        <p>Track and manage inventory items.</p>
-        <a href="inventory.html">Go to Inventory</a>
-      </div>
-      <div class="card">
-        <h3>Work Requests</h3>
-        <p>Manage incoming work-related tasks.</p>
-        <a href="Work Request.html">View Requests</a>
-      </div>
-      <div class="card">
-        <h3>Budgeting</h3>
-        <p>Monitor expenses and costs.</p>
-        <a href="Budget.html">Manage Budget</a>
-      </div>
-      <div class="card">
-        <h3>Maintenance Tasks</h3>
-        <p>View scheduled repairs and updates.</p>
-        <a href="Maintenance.html">View Maintenance</a>
-      </div>
-    </div>
-
-    <footer>
-      <p>&copy; 2025 XU PPO Inventory System</p>
-    </footer>
-  </div>
-
-  <!-- TOGGLE LOGIC -->
-  <script>
-    function toggleView(view) {
-      document.getElementById('login').style.display = (view === 'login') ? 'block' : 'none';
-      document.getElementById('signup').style.display = (view === 'signup') ? 'block' : 'none';
-      document.getElementById('dashboard').style.display = 'none';
-    }
-
-    function showDashboard() {
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('signup').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-    }
-
-    function showLogin() {
-      toggleView('login');
-    }
-  </script>
+  <footer>
+    <p>&copy; 2025 XU PPO Inventory System</p>
+  </footer>
 
 </body>
 </html>
