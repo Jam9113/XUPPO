@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Work Request Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 1000px;
+      width: 100%;
+    }
+    h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      text-align: center; 
+    }
+    .form-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    img {
+      display: block;
+      margin: 0 auto 20px;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+<img src="jkkk.png" alt="Xavier University Logo" style="width: 200px; height: auto;">
+  <h2>XU Physical Plant Office Work Request Management</h2>
+  <div class="form-container">
+    <input type="text" id="workRequestID" placeholder="WorkRequestID">
+    <input type="text" id="workTitle" placeholder="Title">
+    <input type="text" id="workDepartment" placeholder="Department">
+    <input type="text" id="workDescription" placeholder="Description">
+    <input type="text" id="workDate" placeholder="Date">
+    <input type="text" id="workStatus" placeholder="Status">
+  </div>
+<div class="button-container">
+     <button onclick="addWorkRequest()">Add Work Request</button>
+     <button onclick="clearRequest()">Clear</button>
+</div>
+
+  <table id="workRequestTable">
+    <thead>
+      <tr>
+        <th>WorkRequestID</th>
+        <th>Title</th>
+        <th>Department</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Status</th>
+         <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+let editingIndex = null;
+
+function getWorkRequests() {
+  return JSON.parse(localStorage.getItem('workRequests')) || [];
+}
+
+function saveWorkRequests(data) {
+  localStorage.setItem('workRequests', JSON.stringify(data));
+}
+
+function clearRequest() {
+  document.getElementById('workRequestID').value = '';
+  document.getElementById('workTitle').value = '';
+  document.getElementById('workDepartment').value = '';
+  document.getElementById('workDescription').value = '';
+  document.getElementById('workDate').value = '';
+  document.getElementById('workStatus').value = '';
+  editingIndex = null;  
+}
+
+function renderWorkRequests() {
+  const table = document.getElementById('workRequestTable').getElementsByTagName('tbody')[0];
+  table.innerHTML = '';
+  const workRequests = getWorkRequests();
+
+  workRequests.forEach((req, index) => {
+    const newRow = table.insertRow();
+    newRow.innerHTML = `
+      <td>${req.id}</td>
+      <td>${req.title}</td>
+      <td>${req.dept}</td>
+      <td>${req.desc}</td>
+      <td>${req.date}</td>
+      <td>${req.status}</td>
+      <td>
+        <button onclick="editWorkRequest(${index})">Edit</button>
+        <button onclick="deleteWorkRequest(${index})" style="background-color:red;">Delete</button>
+      </td>
+    `;
+  });
+}
+
+function addWorkRequest() {
+  const id = document.getElementById('workRequestID').value;
+  const title = document.getElementById('workTitle').value;
+  const dept = document.getElementById('workDepartment').value;
+  const desc = document.getElementById('workDescription').value;
+  const date = document.getElementById('workDate').value;
+  const status = document.getElementById('workStatus').value;
+
+  if (!id || !title || !dept || !desc || !date || !status) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  const newEntry = { id, title, dept, desc, date, status };
+  const workRequests = getWorkRequests();
+
+  if (editingIndex !== null) {
+    workRequests[editingIndex] = newEntry;
+    editingIndex = null;
+  } else {
+    workRequests.push(newEntry);
+  }
+
+  saveWorkRequests(workRequests);
+  renderWorkRequests();
+  clearForm();
+}
+
+function editWorkRequest(index) {
+  const workRequests = getWorkRequests();
+  const req = workRequests[index];
+  document.getElementById('workRequestID').value = req.id;
+  document.getElementById('workTitle').value = req.title;
+  document.getElementById('workDepartment').value = req.dept;
+  document.getElementById('workDescription').value = req.desc;
+  document.getElementById('workDate').value = req.date;
+  document.getElementById('workStatus').value = req.status;
+  editingIndex = index;
+}
+
+function deleteWorkRequest(index) {
+  if (confirm("Are you sure you want to delete this work request?")) {
+    const workRequests = getWorkRequests();
+    workRequests.splice(index, 1);
+    saveWorkRequests(workRequests);
+    renderWorkRequests();
+  }
+}
+
+function clearForm() {
+  document.getElementById('workRequestID').value = '';
+  document.getElementById('workTitle').value = '';
+  document.getElementById('workDepartment').value = '';
+  document.getElementById('workDescription').value = '';
+  document.getElementById('workDate').value = '';
+  document.getElementById('workStatus').value = '';
+}
+
+window.onload = renderWorkRequests;
+</script>
+</body>
+</html>
